@@ -13,3 +13,19 @@ This project implements the BDI algorithm in Verilog, simulating how BDI can be 
 - **Immediate Value Handling**: Efficiently stores small constant values directly.
 - **Verilog Implementation**: Pure hardware description, making it suitable for FPGA or ASIC designs.
 - **Testbench**: Provided for validating the compression and decompression logic.
+
+# Key Components:
+
+- **Base Selection**:
+  The base value for 8-byte, 4-byte, and 2-byte encoding is selected from the first chunk of data (e.g., Base8 = UnCompressedCache[63:0] for 8-byte).
+
+- **Delta Calculation**:
+  For each section of the data, deltas are computed by subtracting the base value from the corresponding data chunk.
+
+- **Delta Encoding**:
+  The code checks if the computed deltas can fit into smaller sizes (1 byte, 2 bytes, etc.).
+  If they can, it sets a compression flag (CoN) and constructs the compressed cache line (CCL).
+
+- **Compression Conditions**:
+  Each delta is checked to see if the higher-order bits are all 0 or all 1. This check determines if the delta can be represented in fewer bits.
+  If all deltas meet the conditions for a certain bit width, the compressed line is formed.
